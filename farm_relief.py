@@ -14,8 +14,6 @@ from qgis import processing
 
 class FarmReliefProcessingAlgorithm(QgsProcessingAlgorithm):
     DEM = 'dem'
-    VERTICES = 'vertices'
-    COORDINATES = 'coordinates'
     FARM_SHP = 'farm_shape'
     CLIP_DEM = 'clipped_dem'
     FILL_DEM = 'filled_dem'
@@ -34,7 +32,7 @@ class FarmReliefProcessingAlgorithm(QgsProcessingAlgorithm):
         return self.tr('Farm Relief')
 
     def shortHelpString(self):
-        return self.tr("Clip DEM accorgin to a farm shape and then calculate slope values for the area of interest")
+        return self.tr("Clip DEM according to a farm shape and then calculate slope values for the area of interest")
 
     def initAlgorithm(self, config=None):
         self.addParameter(
@@ -45,45 +43,30 @@ class FarmReliefProcessingAlgorithm(QgsProcessingAlgorithm):
             )
         )
         self.addParameter(
-            QgsProcessingParameterVectorDestination(
-                self.VERTICES,
-                self.tr('Output Vertices')
-                [QgsProcessing.TypeVectorAnyGeometry]
-            )
-        )
-        
-        self.addParameter(
-            QgsProcessingParameterVectorDestination(
-                self.COORDINATES,
-                self.tr('Output Coordinates')
-                [QgsProcessing.TypeVectorAnyGeometry]
-            )
-        )
-        self.addParameter(
             QgsProcessingParameterRasterLayer(
                 self.DEM,
-                self.tr('Input Raster DEM')
+                self.tr('Input Raster DEM'),
                 [QgsProcessing.TypeRaster]
             )
         )
         self.addParameter(
             QgsProcessingParameterRasterDestination(
                 self.CLIP_DEM,
-                self.tr('Output Clipped DEM')
+                self.tr('Output Clipped DEM'),
                 [QgsProcessing.TypeRaster]
             )
         )
         self.addParameter(
             QgsProcessingParameterRasterDestination(
                 self.FILL_DEM,
-                self.tr('Output Fill Dem')
+                self.tr('Output Fill Dem'),
                 [QgsProcessing.TypeRaster]
             )
         )
         self.addParameter(
             QgsProcessingParameterRasterDestination(
                 self.SLOPE,
-                self.tr('Output Slope Raster')
+                self.tr('Output Slope Raster'),
                 [QgsProcessing.TypeRaster]
             )
         )
@@ -110,28 +93,6 @@ class FarmReliefProcessingAlgorithm(QgsProcessingAlgorithm):
             context
         )
         
-        feedback.pushInfo('Extracting vertices')
-        extracting = processing.run(
-            'native:extractvertices',
-            {
-                'INPUT':parameters['farm_shape'],
-                'OUTPUT':parameters['vertices']
-            }
-        )
-        feedback.pushInfo('Vertices extracted correctly')
-        
-        feedback.pushInfo('Adding X and Y coordinates')
-        coordinating = processing.run(
-            "native:addxyfields",
-            {
-                'INPUT':extracting['OUTPUT'],
-                'CRS':QgsCoordinateReferenceSystem('EPSG:4326'),
-                'PREFIX':'',
-                'OUTPUT':parameters['coordinates']
-            }
-        )
-        feedback.pushInfo('Coordinates added sucessfully')
-        
         feedback.pushInfo('Starting clipping')
         clipping = processing.runAndLoadResults(
             'gdal:cliprasterbymasklayer',
@@ -157,39 +118,32 @@ class FarmReliefProcessingAlgorithm(QgsProcessingAlgorithm):
         )
         
         feedback.pushInfo('DEM clipped correctly')
-        
-        # Send some information to the user
         feedback.pushInfo('Starting filling')
-        filling = processing.runAndLoadResults(
-            'gdal:fillnodata',
+        filledgaps = processing.runAndLoadResults(
+            'gdal:fillnodata', 
             {
                 'INPUT':clipping['OUTPUT'],
                 'BAND':1,
                 'DISTANCE':10,
-                'ITERATIONS':5,
-                'NO_MASK':True,
+                'ITERATIONS':0,
+                'NO_MASK':False,
                 'MASK_LAYER':None,
                 'OPTIONS':'',
                 'EXTRA':'',
                 'OUTPUT':parameters['filled_dem']
             }
         )
-        
-        feedback.pushInfo('DEM filled correctly')
-
-        # Send some information to the user
         feedback.pushInfo('Starting slope calculation')
+        feedback.pushInfo('DEM filled correctly')
         calculate = processing.runAndLoadResults(
             'native:slope',
             {
-                'INPUT':filling['OUTPUT'],
+                'INPUT':filledgaps['OUTPUT'],
                 'Z_FACTOR':1,
                 'OUTPUT':parameters['slope']
             }
         )
-        feedback.pushInfo('Slope calculated correctly')
-        return {'vertices': extracting['OUTPUT']}
-        return{'coordinates': coordianting['OUTPUT']}
-        return {'filled_dem': filling['OUTPUT']}
+        
         return {'clipped_dem': clipping['OUTPUT']}
+        return {'filled_dem': filledgaps['OUTPUT']}
         return {'slope': calculate['OUTPUT']}
