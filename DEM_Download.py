@@ -1,783 +1,105 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": 45,
-   "id": "c62b9fed-1d0a-4e62-b50c-72b3d04d0d59",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "import geopandas\n",
-    "import numpy as np\n",
-    "import asf_search as asf"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 46,
-   "id": "47994730-1421-47d0-854d-2833c1f6fd23",
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "'C:\\\\Users\\\\Claudia Becerra\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python39'"
-      ]
-     },
-     "execution_count": 46,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "import sys ; sys.prefix"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 47,
-   "id": "21ac1de2-92b7-4ee3-9403-5597e3418c85",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "import sys\n",
-    "sys.path.append(\"C:\\OSGeo4W\\apps\\Python39\\Lib\")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 6,
-   "id": "c7f52ef2-c790-4112-aeb3-aa95d8b34242",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "import os"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 9,
-   "id": "da974be1-c5f1-426e-9e5d-fce7b247bb26",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "import sys\n",
-    "sys.path.append(\"C:\\OSGeo4W\\apps\\qgis\\python\\qgis\")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 34,
-   "id": "e82e947e-a006-48ba-8efe-c8f0fbeca8a9",
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>Id</th>\n",
-       "      <th>vertex_ind</th>\n",
-       "      <th>vertex_par</th>\n",
-       "      <th>vertex_p_1</th>\n",
-       "      <th>vertex_p_2</th>\n",
-       "      <th>distance</th>\n",
-       "      <th>angle</th>\n",
-       "      <th>x</th>\n",
-       "      <th>y</th>\n",
-       "      <th>geometry</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>0</th>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0.000000</td>\n",
-       "      <td>180.000000</td>\n",
-       "      <td>-86.962606</td>\n",
-       "      <td>40.404030</td>\n",
-       "      <td>POINT (-86.96261 40.40403)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>1</th>\n",
-       "      <td>0</td>\n",
-       "      <td>1</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>1</td>\n",
-       "      <td>0.002081</td>\n",
-       "      <td>225.477175</td>\n",
-       "      <td>-86.962606</td>\n",
-       "      <td>40.401949</td>\n",
-       "      <td>POINT (-86.96261 40.40195)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>2</th>\n",
-       "      <td>0</td>\n",
-       "      <td>2</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>2</td>\n",
-       "      <td>0.040115</td>\n",
-       "      <td>319.627922</td>\n",
-       "      <td>-87.000634</td>\n",
-       "      <td>40.402582</td>\n",
-       "      <td>POINT (-87.00063 40.40258)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>3</th>\n",
-       "      <td>0</td>\n",
-       "      <td>3</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>3</td>\n",
-       "      <td>0.041762</td>\n",
-       "      <td>318.764662</td>\n",
-       "      <td>-87.000397</td>\n",
-       "      <td>40.404211</td>\n",
-       "      <td>POINT (-87.00040 40.40421)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>4</th>\n",
-       "      <td>0</td>\n",
-       "      <td>4</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>4</td>\n",
-       "      <td>0.055192</td>\n",
-       "      <td>316.321945</td>\n",
-       "      <td>-87.013826</td>\n",
-       "      <td>40.404030</td>\n",
-       "      <td>POINT (-87.01383 40.40403)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>5</th>\n",
-       "      <td>0</td>\n",
-       "      <td>5</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>5</td>\n",
-       "      <td>0.057186</td>\n",
-       "      <td>317.396774</td>\n",
-       "      <td>-87.013707</td>\n",
-       "      <td>40.406021</td>\n",
-       "      <td>POINT (-87.01371 40.40602)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>6</th>\n",
-       "      <td>0</td>\n",
-       "      <td>6</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>6</td>\n",
-       "      <td>0.079772</td>\n",
-       "      <td>314.985617</td>\n",
-       "      <td>-87.036286</td>\n",
-       "      <td>40.406564</td>\n",
-       "      <td>POINT (-87.03629 40.40656)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>7</th>\n",
-       "      <td>0</td>\n",
-       "      <td>7</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>7</td>\n",
-       "      <td>0.089457</td>\n",
-       "      <td>29.433397</td>\n",
-       "      <td>-87.036524</td>\n",
-       "      <td>40.416246</td>\n",
-       "      <td>POINT (-87.03652 40.41625)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>8</th>\n",
-       "      <td>0</td>\n",
-       "      <td>8</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>8</td>\n",
-       "      <td>0.090552</td>\n",
-       "      <td>70.408777</td>\n",
-       "      <td>-87.035573</td>\n",
-       "      <td>40.416789</td>\n",
-       "      <td>POINT (-87.03557 40.41679)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>9</th>\n",
-       "      <td>0</td>\n",
-       "      <td>9</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>9</td>\n",
-       "      <td>0.094407</td>\n",
-       "      <td>83.596415</td>\n",
-       "      <td>-87.031770</td>\n",
-       "      <td>40.417422</td>\n",
-       "      <td>POINT (-87.03177 40.41742)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>10</th>\n",
-       "      <td>0</td>\n",
-       "      <td>10</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>10</td>\n",
-       "      <td>0.097502</td>\n",
-       "      <td>86.690132</td>\n",
-       "      <td>-87.028681</td>\n",
-       "      <td>40.417603</td>\n",
-       "      <td>POINT (-87.02868 40.41760)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>11</th>\n",
-       "      <td>0</td>\n",
-       "      <td>11</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>11</td>\n",
-       "      <td>0.102264</td>\n",
-       "      <td>87.684516</td>\n",
-       "      <td>-87.023927</td>\n",
-       "      <td>40.417875</td>\n",
-       "      <td>POINT (-87.02393 40.41787)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>12</th>\n",
-       "      <td>0</td>\n",
-       "      <td>12</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>12</td>\n",
-       "      <td>0.106068</td>\n",
-       "      <td>95.454602</td>\n",
-       "      <td>-87.020124</td>\n",
-       "      <td>40.417965</td>\n",
-       "      <td>POINT (-87.02012 40.41797)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>13</th>\n",
-       "      <td>0</td>\n",
-       "      <td>13</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>13</td>\n",
-       "      <td>0.109473</td>\n",
-       "      <td>101.013439</td>\n",
-       "      <td>-87.016797</td>\n",
-       "      <td>40.417241</td>\n",
-       "      <td>POINT (-87.01680 40.41724)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>14</th>\n",
-       "      <td>0</td>\n",
-       "      <td>14</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>14</td>\n",
-       "      <td>0.113211</td>\n",
-       "      <td>92.770443</td>\n",
-       "      <td>-87.013113</td>\n",
-       "      <td>40.416608</td>\n",
-       "      <td>POINT (-87.01311 40.41661)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>15</th>\n",
-       "      <td>0</td>\n",
-       "      <td>15</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>15</td>\n",
-       "      <td>0.116905</td>\n",
-       "      <td>87.893061</td>\n",
-       "      <td>-87.009429</td>\n",
-       "      <td>40.416879</td>\n",
-       "      <td>POINT (-87.00943 40.41688)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>16</th>\n",
-       "      <td>0</td>\n",
-       "      <td>16</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>16</td>\n",
-       "      <td>0.120470</td>\n",
-       "      <td>90.262776</td>\n",
-       "      <td>-87.005863</td>\n",
-       "      <td>40.416879</td>\n",
-       "      <td>POINT (-87.00586 40.41688)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>17</th>\n",
-       "      <td>0</td>\n",
-       "      <td>17</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>17</td>\n",
-       "      <td>0.130334</td>\n",
-       "      <td>94.961720</td>\n",
-       "      <td>-86.996000</td>\n",
-       "      <td>40.416789</td>\n",
-       "      <td>POINT (-86.99600 40.41679)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>18</th>\n",
-       "      <td>0</td>\n",
-       "      <td>18</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>18</td>\n",
-       "      <td>0.133105</td>\n",
-       "      <td>105.470492</td>\n",
-       "      <td>-86.993266</td>\n",
-       "      <td>40.416337</td>\n",
-       "      <td>POINT (-86.99327 40.41634)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>19</th>\n",
-       "      <td>0</td>\n",
-       "      <td>19</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>19</td>\n",
-       "      <td>0.136555</td>\n",
-       "      <td>102.665445</td>\n",
-       "      <td>-86.990058</td>\n",
-       "      <td>40.415070</td>\n",
-       "      <td>POINT (-86.99006 40.41507)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>20</th>\n",
-       "      <td>0</td>\n",
-       "      <td>20</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>20</td>\n",
-       "      <td>0.139294</td>\n",
-       "      <td>96.830007</td>\n",
-       "      <td>-86.987324</td>\n",
-       "      <td>40.414889</td>\n",
-       "      <td>POINT (-86.98732 40.41489)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>21</th>\n",
-       "      <td>0</td>\n",
-       "      <td>21</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>21</td>\n",
-       "      <td>0.143516</td>\n",
-       "      <td>101.811966</td>\n",
-       "      <td>-86.983165</td>\n",
-       "      <td>40.414165</td>\n",
-       "      <td>POINT (-86.98316 40.41417)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>22</th>\n",
-       "      <td>0</td>\n",
-       "      <td>22</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>22</td>\n",
-       "      <td>0.146942</td>\n",
-       "      <td>106.087574</td>\n",
-       "      <td>-86.979837</td>\n",
-       "      <td>40.413351</td>\n",
-       "      <td>POINT (-86.97984 40.41335)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>23</th>\n",
-       "      <td>0</td>\n",
-       "      <td>23</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>23</td>\n",
-       "      <td>0.150950</td>\n",
-       "      <td>106.855245</td>\n",
-       "      <td>-86.976035</td>\n",
-       "      <td>40.412084</td>\n",
-       "      <td>POINT (-86.97603 40.41208)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>24</th>\n",
-       "      <td>0</td>\n",
-       "      <td>24</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>24</td>\n",
-       "      <td>0.155755</td>\n",
-       "      <td>115.617734</td>\n",
-       "      <td>-86.971400</td>\n",
-       "      <td>40.410817</td>\n",
-       "      <td>POINT (-86.97140 40.41082)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>25</th>\n",
-       "      <td>0</td>\n",
-       "      <td>25</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>25</td>\n",
-       "      <td>0.158837</td>\n",
-       "      <td>118.986308</td>\n",
-       "      <td>-86.968904</td>\n",
-       "      <td>40.409007</td>\n",
-       "      <td>POINT (-86.96890 40.40901)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>26</th>\n",
-       "      <td>0</td>\n",
-       "      <td>26</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>26</td>\n",
-       "      <td>0.162940</td>\n",
-       "      <td>106.523465</td>\n",
-       "      <td>-86.965101</td>\n",
-       "      <td>40.407469</td>\n",
-       "      <td>POINT (-86.96510 40.40747)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>27</th>\n",
-       "      <td>0</td>\n",
-       "      <td>27</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>27</td>\n",
-       "      <td>0.168146</td>\n",
-       "      <td>134.800282</td>\n",
-       "      <td>-86.959991</td>\n",
-       "      <td>40.406474</td>\n",
-       "      <td>POINT (-86.95999 40.40647)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>28</th>\n",
-       "      <td>0</td>\n",
-       "      <td>28</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>28</td>\n",
-       "      <td>0.169346</td>\n",
-       "      <td>218.380276</td>\n",
-       "      <td>-86.959753</td>\n",
-       "      <td>40.405297</td>\n",
-       "      <td>POINT (-86.95975 40.40530)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>29</th>\n",
-       "      <td>0</td>\n",
-       "      <td>29</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>29</td>\n",
-       "      <td>0.172200</td>\n",
-       "      <td>224.091356</td>\n",
-       "      <td>-86.962606</td>\n",
-       "      <td>40.405207</td>\n",
-       "      <td>POINT (-86.96261 40.40521)</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>30</th>\n",
-       "      <td>0</td>\n",
-       "      <td>30</td>\n",
-       "      <td>0</td>\n",
-       "      <td>0</td>\n",
-       "      <td>30</td>\n",
-       "      <td>0.173376</td>\n",
-       "      <td>180.000000</td>\n",
-       "      <td>-86.962606</td>\n",
-       "      <td>40.404030</td>\n",
-       "      <td>POINT (-86.96261 40.40403)</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "    Id  vertex_ind  vertex_par  vertex_p_1  vertex_p_2  distance       angle  \\\n",
-       "0    0           0           0           0           0  0.000000  180.000000   \n",
-       "1    0           1           0           0           1  0.002081  225.477175   \n",
-       "2    0           2           0           0           2  0.040115  319.627922   \n",
-       "3    0           3           0           0           3  0.041762  318.764662   \n",
-       "4    0           4           0           0           4  0.055192  316.321945   \n",
-       "5    0           5           0           0           5  0.057186  317.396774   \n",
-       "6    0           6           0           0           6  0.079772  314.985617   \n",
-       "7    0           7           0           0           7  0.089457   29.433397   \n",
-       "8    0           8           0           0           8  0.090552   70.408777   \n",
-       "9    0           9           0           0           9  0.094407   83.596415   \n",
-       "10   0          10           0           0          10  0.097502   86.690132   \n",
-       "11   0          11           0           0          11  0.102264   87.684516   \n",
-       "12   0          12           0           0          12  0.106068   95.454602   \n",
-       "13   0          13           0           0          13  0.109473  101.013439   \n",
-       "14   0          14           0           0          14  0.113211   92.770443   \n",
-       "15   0          15           0           0          15  0.116905   87.893061   \n",
-       "16   0          16           0           0          16  0.120470   90.262776   \n",
-       "17   0          17           0           0          17  0.130334   94.961720   \n",
-       "18   0          18           0           0          18  0.133105  105.470492   \n",
-       "19   0          19           0           0          19  0.136555  102.665445   \n",
-       "20   0          20           0           0          20  0.139294   96.830007   \n",
-       "21   0          21           0           0          21  0.143516  101.811966   \n",
-       "22   0          22           0           0          22  0.146942  106.087574   \n",
-       "23   0          23           0           0          23  0.150950  106.855245   \n",
-       "24   0          24           0           0          24  0.155755  115.617734   \n",
-       "25   0          25           0           0          25  0.158837  118.986308   \n",
-       "26   0          26           0           0          26  0.162940  106.523465   \n",
-       "27   0          27           0           0          27  0.168146  134.800282   \n",
-       "28   0          28           0           0          28  0.169346  218.380276   \n",
-       "29   0          29           0           0          29  0.172200  224.091356   \n",
-       "30   0          30           0           0          30  0.173376  180.000000   \n",
-       "\n",
-       "            x          y                    geometry  \n",
-       "0  -86.962606  40.404030  POINT (-86.96261 40.40403)  \n",
-       "1  -86.962606  40.401949  POINT (-86.96261 40.40195)  \n",
-       "2  -87.000634  40.402582  POINT (-87.00063 40.40258)  \n",
-       "3  -87.000397  40.404211  POINT (-87.00040 40.40421)  \n",
-       "4  -87.013826  40.404030  POINT (-87.01383 40.40403)  \n",
-       "5  -87.013707  40.406021  POINT (-87.01371 40.40602)  \n",
-       "6  -87.036286  40.406564  POINT (-87.03629 40.40656)  \n",
-       "7  -87.036524  40.416246  POINT (-87.03652 40.41625)  \n",
-       "8  -87.035573  40.416789  POINT (-87.03557 40.41679)  \n",
-       "9  -87.031770  40.417422  POINT (-87.03177 40.41742)  \n",
-       "10 -87.028681  40.417603  POINT (-87.02868 40.41760)  \n",
-       "11 -87.023927  40.417875  POINT (-87.02393 40.41787)  \n",
-       "12 -87.020124  40.417965  POINT (-87.02012 40.41797)  \n",
-       "13 -87.016797  40.417241  POINT (-87.01680 40.41724)  \n",
-       "14 -87.013113  40.416608  POINT (-87.01311 40.41661)  \n",
-       "15 -87.009429  40.416879  POINT (-87.00943 40.41688)  \n",
-       "16 -87.005863  40.416879  POINT (-87.00586 40.41688)  \n",
-       "17 -86.996000  40.416789  POINT (-86.99600 40.41679)  \n",
-       "18 -86.993266  40.416337  POINT (-86.99327 40.41634)  \n",
-       "19 -86.990058  40.415070  POINT (-86.99006 40.41507)  \n",
-       "20 -86.987324  40.414889  POINT (-86.98732 40.41489)  \n",
-       "21 -86.983165  40.414165  POINT (-86.98316 40.41417)  \n",
-       "22 -86.979837  40.413351  POINT (-86.97984 40.41335)  \n",
-       "23 -86.976035  40.412084  POINT (-86.97603 40.41208)  \n",
-       "24 -86.971400  40.410817  POINT (-86.97140 40.41082)  \n",
-       "25 -86.968904  40.409007  POINT (-86.96890 40.40901)  \n",
-       "26 -86.965101  40.407469  POINT (-86.96510 40.40747)  \n",
-       "27 -86.959991  40.406474  POINT (-86.95999 40.40647)  \n",
-       "28 -86.959753  40.405297  POINT (-86.95975 40.40530)  \n",
-       "29 -86.962606  40.405207  POINT (-86.96261 40.40521)  \n",
-       "30 -86.962606  40.404030  POINT (-86.96261 40.40403)  "
-      ]
-     },
-     "execution_count": 34,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "points = geopandas.read_file(r'C:\\Users\\Claudia Becerra\\OneDrive - Universidad Nacional de Colombia\\Documentos\\GIS Project\\puntos.shp')\n",
-    "points"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 48,
-   "id": "e28aad1d-6116-4bd0-b484-b17819159454",
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>Id</th>\n",
-       "      <th>geometry</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>0</th>\n",
-       "      <td>0</td>\n",
-       "      <td>POLYGON ((-86.96261 40.40403, -86.96261 40.401...</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "   Id                                           geometry\n",
-       "0   0  POLYGON ((-86.96261 40.40403, -86.96261 40.401..."
-      ]
-     },
-     "execution_count": 48,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "polygon = geopandas.read_file(r'C:\\Users\\Claudia Becerra\\OneDrive - Universidad Nacional de Colombia\\Documentos\\GIS Project\\Farm.shp')\n",
-    "polygon"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 52,
-   "id": "f5c4c9b2-ed06-4f32-8131-5c702020d250",
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "'POLYGON ((-86.96260563469728 40.404030300333694, -86.96260563469728 40.401948867269866, -87.00063439111584 40.40258235371104, -87.00039671138825 40.40421129147154, -87.01382561599857 40.404030300333694, -87.01370677613475 40.40602117608458, -87.03628635025825 40.40656413197863, -87.0365240299859 40.41624610988637, -87.03557331107545 40.41678898328949, -87.03177043543356 40.417422330057036, -87.02868059897456 40.4176032851813, -87.02392700442222 40.41787471695517, -87.02012412878035 40.4179651939698, -87.01679661259374 40.41724137444615, -87.0131125768157 40.41660802597508, -87.00942854103762 40.416879461764125, -87.00586334512342 40.416879461764125, -86.99599963642737 40.41678898328949, -86.99326631955978 40.4163365890911, -86.99005764323691 40.41506986915318, -86.98732432636933 40.41488890721538, -86.9831649311361 40.414165054597134, -86.97983741494946 40.41335071109377, -86.9760345393076 40.412083934944405, -86.97139978461908 40.41081713494785, -86.96890414747914 40.40900737930022, -86.96510127183724 40.4074690487356, -86.95999115769348 40.406473639633745, -86.95975347796589 40.40529722807925, -86.96260563469728 40.40520673403107, -86.96260563469728 40.404030300333694))'"
-      ]
-     },
-     "execution_count": 52,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "coordinates = polygon['geometry'].to_wkt()\n",
-    "aoi = coordinates[0]\n",
-    "aoi"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 17,
-   "id": "f7bb0f64",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "session = asf.ASFSession()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 53,
-   "id": "bc6bb694-6e6b-4919-a337-2080cd9ab52f",
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stdin",
-     "output_type": "stream",
-     "text": [
-      "Username: cmbecerrara\n",
-      "Password: ········\n"
-     ]
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "Success!\n"
-     ]
-    }
-   ],
-   "source": [
-    "import getpass\n",
-    "username = input('Username:')\n",
-    "password = getpass.getpass('Password:')\n",
-    "\n",
-    "try:\n",
-    "    user_pass_session = asf.ASFSession().auth_with_creds(username, password)\n",
-    "except asf.ASFAuthenticationError as e:\n",
-    "    print(f'Auth Failed: {e}')\n",
-    "else:\n",
-    "    print('Success!')"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 54,
-   "id": "e2c7fee9-c69c-483d-93aa-67d91820e833",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "opts = {\n",
-    "    'platform': asf.PLATFORM.ALOS,\n",
-    "    'instrument':asf.INSTRUMENT.PALSAR,\n",
-    "    'processingLevel':asf.PRODUCT_TYPE.RTC_HIGH_RES,\n",
-    "    'start': '2009-01-01T00:00:00Z',\n",
-    "    'end': '2011-02-01T23:59:59Z'\n",
-    "}"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 55,
-   "id": "cd5843a1-1671-4b54-9035-5b7283c079ff",
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "17 results found\n"
-     ]
-    }
-   ],
-   "source": [
-    "results = asf.geo_search(intersectsWith=aoi, **opts)\n",
-    "\n",
-    "print(f'{len(results)} results found')"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "7b18394e-fc52-4124-bee5-608019f0b1a1",
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3 (ipykernel)",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.9.5"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 5
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[45]:
+
+
+import geopandas
+import numpy as np
+import asf_search as asf
+
+
+# In[46]:
+
+
+import sys ; sys.prefix
+
+
+# In[47]:
+
+
+import sys
+sys.path.append("C:\OSGeo4W\apps\Python39\Lib")
+
+
+# In[6]:
+
+
+import os
+
+
+# In[9]:
+
+
+import sys
+sys.path.append("C:\OSGeo4W\apps\qgis\python\qgis")
+
+
+# In[34]:
+
+
+points = geopandas.read_file(r'C:\Users\Claudia Becerra\OneDrive - Universidad Nacional de Colombia\Documentos\GIS Project\puntos.shp')
+points
+
+
+# In[48]:
+
+
+polygon = geopandas.read_file(r'C:\Users\Claudia Becerra\OneDrive - Universidad Nacional de Colombia\Documentos\GIS Project\Farm.shp')
+polygon
+
+
+# In[52]:
+
+
+coordinates = polygon['geometry'].to_wkt()
+aoi = coordinates[0]
+aoi
+
+
+# In[17]:
+
+
+session = asf.ASFSession()
+
+
+# In[53]:
+
+
+import getpass
+username = input('Username:')
+password = getpass.getpass('Password:')
+
+try:
+    user_pass_session = asf.ASFSession().auth_with_creds(username, password)
+except asf.ASFAuthenticationError as e:
+    print(f'Auth Failed: {e}')
+else:
+    print('Success!')
+
+
+# In[54]:
+
+
+opts = {
+    'platform': asf.PLATFORM.ALOS,
+    'instrument':asf.INSTRUMENT.PALSAR,
+    'processingLevel':asf.PRODUCT_TYPE.RTC_HIGH_RES,
+    'start': '2009-01-01T00:00:00Z',
+    'end': '2011-02-01T23:59:59Z'
 }
+
+
+# In[55]:
+
+
+results = asf.geo_search(intersectsWith=aoi, **opts)
+
+print(f'{len(results)} results found')
+
+
+# In[ ]:
+
+
+
+
