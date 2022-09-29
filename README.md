@@ -6,7 +6,7 @@ QGIS Python API allows to run Python code in order to build processing algorithm
 
 ## Workflow
 1. Download a Digital Elevation Model from Alos Palsar satelite that intersects with our polygon. 
-![alsvrtx]("img\alaska_vertex.jpg")
+![alsvrtx]("img/alaska_vertex.jpg")
 2. Clip the DEM to match the extent of our polygon shapefile.
 3. Fill the missing data gaps present in the DEM, using GDAL tools.
 4. Calculate the slope value from the DEM altitude values.
