@@ -1,4 +1,4 @@
-# QGIS WebAPP 
+# QGIS Python
 PyQGIS scripts for raster operations related to hidrology and relief. 
 
 ## PyQGIS
