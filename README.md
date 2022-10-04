@@ -17,17 +17,17 @@ QGIS has different methods to add a basemap, one of them is connecting to a Web 
 - Add the name of the connection, paste the URL and hit OK.
 - Once this is done, a new option with the connection name will appear under *WMS/WMTS* on the *Browser*. Click on the conection and drag the layers to the main console in order to visualize it. 
 
-[Add WMS](img/add_wms.png)
+![Add WMS](img/add_wms.png)
 
 To create a polygon that represents the area of interest, a new shapefile layer needs to be created. 
 - On the toolbar select *New Shapefile Layer...*, define the name and destination of the layer, select 'Polygon' as the *Geometry Type*, and ESPG:4326-WGS 84 as the coordinate reference system. 
 
-[New SHP](img/new%20_shp.png)
+![New SHP](img/new%20_shp.png)
 
 - Select the created layer on the *Layers* window, then on the toolbar look for a pencil icon named *Toggle Editing* and click it. This activates the editor mode on QGIS allowing to make changes to the layers. 
 - Next to *Toggle Editing*, selec the option *Add Polygon Feature* and draw a polygon. To close the polygon right click and add the value of 1 to the id window that appears after finishing it. Then save the changes made and keep the editing mode activated.
 
-[Save Edits](img/save_edits.png)
+![Save Edits](img/save_edits.png)
 
 ### Download Alos Palsar DEM from QGIS
 Files under the name  'Alos_Palsar_Grid' will be used. The grid represents the different areas captured by the sensor inside the state of Indiana. 
@@ -38,7 +38,7 @@ Alos Palsar sensor follows linear paths and to ensure coverage images have overl
 - Select *Open the layer styling* on the *Layers* window, then select *Simple Lines* as the symbol layer type, with color red and a stroke width of 1 milimeter. Now on the created polygon, the basemap and the different grids for Alos Palsar imagery are visible. 
 - Right click on the layer and select *Open attribute table*, on the table there is a column named 'URL', this is the URL used to download the sensor data.
 
-[Grid Symbology](img/shp_symb.png)
+![Grid Symbology](img/shp_symb.png)
 
 To open that URL directly from QGIS, an action for the 'Alos_Palsar_Grid' will be created. 
 
