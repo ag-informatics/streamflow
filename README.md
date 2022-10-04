@@ -1,19 +1,18 @@
-# QGIS Python
-PyQGIS scripts for raster operations related to hidrology and relief. 
-
-## PyQGIS
+# PyQGIS
 QGIS Python API allows to run Python code in order to build processing algorithms, functions, and plugins using the QGIS interface. The code can be written on the Python Console present in QGIS or as a standalone script.
 
+## Download QGIS
+QGIS is an open source GIS application. If you already QGIS installed in your computer please update it to the latest version or latest stable release. If you don't have QGIS installed you can download it here: [Download QGIS](https://www.qgis.org/en/site/forusers/download.html)
+
+## Register at NASA Earthdata 
+We will work with raster files, specifically a digital elevation model (DEM). The images will be obtained through Alaska Satelite Facility ASF, it contains imagery from various sensors, in our case we want the data from the Alos Palsar sensor. 
+
+In order to download data, you must create a Nasa Earthdata Account, you can create it here: [Nasa Earthddata Registration](https://urs.earthdata.nasa.gov/users/new?client_id=BO_n7nTIlMljdvU6kRRB3g&redirect_uri=https%3A%2F%2Fauth.asf.alaska.edu%2Flogin&response_type=code&state=https%3A%2F%2Fsearch.asf.alaska.edu)
+
 ## Workflow
-1. Download a Digital Elevation Model from Alos Palsar satelite that intersects with our polygon. 
-![alsvrtx](img/alaska_vertex.JPG)
-2. Clip the DEM to match the extent of our polygon shapefile.
-3. Fill the missing data gaps present in the DEM, using GDAL tools.
-4. Calculate the slope value from the DEM altitude values.
+Please read carefully the following steps:
 
-Geopandas and ASF Search packages should be installed in the Pyhton QGIS environment. Tutorial for installing Python Packages on QGIS: https://landscapearchaeology.org/2018/installing-python-packages-in-qgis-3-for-windows/
-
-### ASF_Search
+### Download Alos Palsar DEM from QGIS
 
 
 ### QGIS Processing
