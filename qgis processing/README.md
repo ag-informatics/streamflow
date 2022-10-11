@@ -204,6 +204,7 @@ To integrate the other processes, the addtional parameters and operations must b
             }
         )      
 [/col]
+[/row]
 
 Results are returned
 
