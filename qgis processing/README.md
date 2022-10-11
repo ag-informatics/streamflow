@@ -149,7 +149,67 @@ It is necessary to assign a variable name to the process in order to connect the
 ### Putting it together
 To integrate the other processes, the addtional parameters and operations must be created under the *def processAlgorithm* function. 
 
+[row]
 
+[col]
+        clipping = processing.runAndLoadResults(
+            'gdal:cliprasterbymasklayer',
+            {
+                'INPUT':parameters['dem'],
+                'MASK':parameters['farm_shape'],
+                'SOURCE_CRS':None,
+                'TARGET_CRS':None,
+                'TARGET_EXTENT':None,
+                'NODATA':-9999,
+                'ALPHA_BAND':False,
+                'CROP_TO_CUTLINE':True,
+                'KEEP_RESOLUTION':False,
+                'SET_RESOLUTION':False,
+                'X_RESOLUTION':None,
+                'Y_RESOLUTION':None,
+                'MULTITHREADING':False,
+                'OPTIONS':'',
+                'DATA_TYPE':0,
+                'EXTRA':'',
+                'OUTPUT':parameters['clipped_dem']
+            }
+        )
+        
+[/col]
+
+[col]
+        filledgaps = processing.runAndLoadResults(
+            'gdal:fillnodata', 
+            {
+                'INPUT':clipping['OUTPUT'],
+                'BAND':1,
+                'DISTANCE':10,
+                'ITERATIONS':0,
+                'NO_MASK':False,
+                'MASK_LAYER':None,
+                'OPTIONS':'',
+                'EXTRA':'',
+                'OUTPUT':parameters['filled_dem']
+            }
+        )        
+[/col]
+
+[col]
+        calculate = processing.runAndLoadResults(
+            'native:slope',
+            {
+                'INPUT':filledgaps['OUTPUT'],
+                'Z_FACTOR':1,
+                'OUTPUT':parameters['slope']
+            }
+        )      
+[/col]
+
+Results are returned
+
+        return {'clipped_dem': clipping['OUTPUT']}
+        return {'filled_dem': filledgaps['OUTPUT']}
+        return {'slope': calculate['OUTPUT']}  
 
 
 ### Symbology
