@@ -61,7 +61,7 @@ class FillDemProcessingAlgorithm(QgsProcessingAlgorithm):
         # Send some information to the user
         feedback.pushInfo('Starting filling')
 
-        filledgaps = processing.runAndLoadResults(
+        filledgaps = processing.run(
             'gdal:fillnodata', 
             {
                 'INPUT':parameters['clipped_dem'],

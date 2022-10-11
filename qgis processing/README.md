@@ -112,6 +112,7 @@ To execute the desired operation, an existent tool from QGIS is used. The tool i
 
 There are two ways to know the tool requirements:
 - Use the algortihm help method in the Python console.
+
         processing.algorithmHelp("native:buffer")
 
 - Select and execute the tool from the *Toolbox* window, and then select on the top menu bar *Processing* --> *History* to see the requirements.
@@ -146,6 +147,9 @@ It is necessary to assign a variable name to the process in order to connect the
         return {'clipped_dem': clipping['OUTPUT']}
 
 ### Putting it together
+To integrate the other processes, the addtional parameters and operations must be created under the *def processAlgorithm* function. 
+
+
 
 
 ### Symbology

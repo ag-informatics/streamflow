@@ -61,7 +61,7 @@ class SlopeProcessingAlgorithm(QgsProcessingAlgorithm):
 
         # Send some information to the user
         feedback.pushInfo('Starting slope calculation')
-        calculate = processing.runAndLoadResults(
+        calculate = processing.run(
             'native:slope',
             {
                 'INPUT':parameters['filled_dem'],
