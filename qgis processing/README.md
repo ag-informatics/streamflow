@@ -11,7 +11,7 @@ PyQGIS has 4 libraries:
 Within these libraries are multiple Python classes that are built to execute all QGIS functionalities. All classes must be named with the prefix 'Qgs'.
 
 ## Processing Algorithm
-QGIS comes with established method that are found in the Toolbox window. It is possible to create new tools by writing a processing algorithm from the Python console inside QGIS using the PyQGIS classes. Processing algortihms can use the already existent tools to create new workflows and spatial operations . 
+QGIS comes with established method that are found in the Toolbox window. It is possible to create new tools to be part of this toolbox by writing a processing algorithm. The algorithm uses the Python console inside QGIS and the PyQGIS classes. Processing algortihms can use the already existent tools to create new workflows and spatial operations . 
 
 In order to make things easier and structured QGIS allows to create processing algorithms following a template. On the *Toolbox* window, click on the Python icon and select *Create New Script from Template*.
 
@@ -39,12 +39,15 @@ First the class 'QCoreApplication', is imported from the Qt framework. This clas
 A Python class is created, it contains all the parameters and methods needed in the processing algorithm. This class is named according to the purpose of the algorithm.  
 
         class ClipDemProcessingAlgorithm(QgsProcessingAlgorithm):
+
+Given that the process algorithm works like a QGIS tool, parameters must be named. In this case the parameters are: a shapefile, a DEM file (input), and a clipped DEM (output) according to the extent of the shapefile.
+
+        class ClipDemProcessingAlgorithm(QgsProcessingAlgorithm):
             DEM = 'dem'
             FARM_SHP = 'farm_shape'
             CLIP_DEM = 'clipped_dem'
 
-
-
+Once the parameters are named, functions are used to provide a title and a short description of the algorithm.
             def tr(self, string):
                 return QCoreApplication.translate('Processing', string)
 
@@ -60,6 +63,7 @@ A Python class is created, it contains all the parameters and methods needed in 
             def shortHelpString(self):
                 return self.tr("Clip Raster by Mask Layer")
 
+Next a function to iniate the algorithm defines in further details the parameters. This is done by using the *QgsProcessingParameter* classes. In this case we define the vector layer as a feature source, the input DEM as a raster layer, and the output clipped DEM as a raster destination.
 
         def initAlgorithm(self, config=None):
             self.addParameter(
@@ -67,6 +71,21 @@ A Python class is created, it contains all the parameters and methods needed in 
                     self.FARM_SHP,
                     self.tr('Input Farm Shape'),
                     [QgsProcessing.TypeVectorAnyGeometry]
+                )
+            )
+            self.addParameter(
+                QgsProcessingParameterRasterLayer(
+                    self.DEM,
+                    self.tr('Input Raster DEM')
+                    [QgsProcessing.TypeRaster]
+                )
+            )
+        
+            self.addParameter(
+                QgsProcessingParameterRasterDestination(
+                    self.CLIP_DEM,
+                    self.tr('Output Clipped DEM')
+                    [QgsProcessing.TypeRaster]
                 )
             )
 
