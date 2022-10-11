@@ -48,6 +48,7 @@ Given that the process algorithm works like a QGIS tool, parameters must be name
             CLIP_DEM = 'clipped_dem'
 
 Once the parameters are named, functions are used to provide a title and a short description of the algorithm.
+            
             def tr(self, string):
                 return QCoreApplication.translate('Processing', string)
 
@@ -63,7 +64,7 @@ Once the parameters are named, functions are used to provide a title and a short
             def shortHelpString(self):
                 return self.tr("Clip Raster by Mask Layer")
 
-Next a function to iniate the algorithm defines in further details the parameters. This is done by using the *QgsProcessingParameter* classes. In this case we define the vector layer as a feature source, the input DEM as a raster layer, and the output clipped DEM as a raster destination.
+Next, a function to iniate the algorithm defines in further details the parameters. This is done by using the *QgsProcessingParameter* classes. In this case we define the input vector layer as a feature source, input DEM as a raster layer, and the output clipped DEM as a raster destination.
 
         def initAlgorithm(self, config=None):
             self.addParameter(
@@ -89,7 +90,11 @@ Next a function to iniate the algorithm defines in further details the parameter
                 )
             )
 
-  
+The previous code results in a tool with a QGIS graphic user interface.
+![Parameters](img/Parameters.png)
+
+The final function calls the current instance of the class to access the variables to be used in the algorithm. 
+
         def processAlgorithm(self, parameters, context, feedback):
             
                 farm_shape= self.parameterAsSource(
@@ -103,7 +108,19 @@ Next a function to iniate the algorithm defines in further details the parameter
                     context
                 )
 
-        clipping = processing.runAndLoadResults(
+To execute the desired operation, an existent tool from QGIS is used. The tool is named *Clip Raster by Mask Layer*, it is executed using the *run()* method and it has its own requirements. 
+
+There are two ways to know the tool requirements:
+- Use the algortihm help method in the Python console.
+        processing.algorithmHelp("native:buffer")
+
+- Select and execute the tool from the *Toolbox* window, and then select on the top menu bar *Processing* --> *History* to see the requirements.
+
+![History](img/History.png)
+
+It is necessary to assign a variable name to the process in order to connect the results once the other operations are added. Once it is complete, the 'clipped_dem' parameter is returned to be equal as the ouput of the clipping operation. 
+
+        clipping = processing.run(
                     'gdal:cliprasterbymasklayer',
                     {
                         'INPUT':parameters['dem'],
@@ -127,3 +144,8 @@ Next a function to iniate the algorithm defines in further details the parameter
                 )
 
         return {'clipped_dem': clipping['OUTPUT']}
+
+### Putting it together
+
+
+### Symbology
