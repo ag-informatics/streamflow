@@ -24,6 +24,10 @@ The goal is to build a processing script that will:
 This repository contains a separate code for each step (clipping, filling, & calculating), and one consolidated script that joins the three together. 
 
 ### Script structure
+Let's disect the strucuture of the 'clip_dem' script
+
+First the class 'QCoreApplication', is imported from the Qt framework. This class is used to provide and contain a main event loop, in which other events from the operating system and QGIS can be processed and dispatched.  Next, qgis classes needed are imported from the qgis core module. 
+
         from qgis.PyQt.QtCore import QCoreApplication
         from qgis.core import (QgsProcessing,
                        QgsProcessingAlgorithm,
@@ -32,10 +36,14 @@ This repository contains a separate code for each step (clipping, filling, & cal
                        QgsProcessingParameterRasterDestination)
         from qgis import processing
 
+A Python class is created, it contains all the parameters and methods needed in the processing algorithm. This class is named according to the purpose of the algorithm.  
+
         class ClipDemProcessingAlgorithm(QgsProcessingAlgorithm):
             DEM = 'dem'
             FARM_SHP = 'farm_shape'
             CLIP_DEM = 'clipped_dem'
+
+
 
             def tr(self, string):
                 return QCoreApplication.translate('Processing', string)
