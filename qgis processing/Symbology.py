@@ -1,5 +1,4 @@
-fn = r'C:\Users\Claudia Becerra\OneDrive - Universidad Nacional de Colombia\Documentos\GIS Project\FarmA\Clip.tif'
-rlayer = iface.addRasterLayer(fn,'Clip')
+rlayer = iface.activeLayer()
 stats = rlayer.dataProvider().bandStatistics(1, QgsRasterBandStats.All)
 min = stats.minimumValue
 max = stats.maximumValue
@@ -37,5 +36,5 @@ shader.setRasterShaderFunction(symbol)
 
 renderer = QgsSingleBandPseudoColorRenderer(rlayer.dataProvider(), 1, shader)
 rlayer.setRenderer(renderer)
-
-    
+rlayer.triggerRepaint()
+iface.layerTreeView().refreshLayerSymbology(rlayer.id())
