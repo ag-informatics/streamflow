@@ -1,9 +1,10 @@
-# PyQGIS
-- **Dem Download**: Explains how to create a polygon that represents the area of interest and how to download sensor data from QGIS.
-- **QGIS Processing**: Explains the basic structure of a PyQGIS processing script. 
+#Before the lab
 
 ## Download and Install QGIS
 QGIS is an open source GIS application. If you already QGIS installed in your computer please update it to the latest version or latest stable release. If you don't have QGIS installed you can download it here: [Download QGIS](https://www.qgis.org/en/site/forusers/download.html)
+
+- If it is your first time using QGIS, here's an [introduction tutorial](https://courses.spatialthoughts.com/introduction-to-qgis.html) to get familiar with the interface.
+- Given that we will be working with PyQGIS, here's a [series of tutorials](https://anitagraser.com/pyqgis-101-introduction-to-qgis-python-programming-for-non-programmers/) to follow. Tutorials recommended are number 6, 7, & 14. 
 
 ## Register at NASA Earthdata 
 We will work with raster files, specifically a digital elevation model (DEM). The images will be obtained through Alaska Satelite Facility ASF, it contains imagery from various sensors. In our case we want the data from the Alos Palsar sensor. 
