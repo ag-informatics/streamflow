@@ -1,4 +1,4 @@
-#Before the lab
+# Before the lab
 
 ## Download and Install QGIS
 QGIS is an open source GIS application. If you already QGIS installed in your computer please update it to the latest version or latest stable release. If you don't have QGIS installed you can download it here: [Download QGIS](https://www.qgis.org/en/site/forusers/download.html)
