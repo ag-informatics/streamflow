@@ -4,14 +4,21 @@
 QGIS is an open source GIS application. If you already QGIS installed in your computer please update it to the latest version or latest stable release. If you don't have QGIS installed you can download it here: [Download QGIS](https://www.qgis.org/en/site/forusers/download.html)
 
 - If it is your first time using QGIS, here's an [introduction tutorial](https://courses.spatialthoughts.com/introduction-to-qgis.html) to get familiar with the interface.
-- Given that we will be working with PyQGIS, here's a [series of tutorials](https://anitagraser.com/pyqgis-101-introduction-to-qgis-python-programming-for-non-programmers/) to follow. Tutorials recommended are number 6, 7, & 14. 
+- Given that we will be working with PyQGIS, here's a [series of tutorials](https://anitagraser.com/pyqgis-101-introduction-to-qgis-python-programming-for-non-programmers/) to follow. Tutorials recommended for this exercise are number 6, 7, & 14. 
 
 ## Register at NASA Earthdata 
 We will work with raster files, specifically a digital elevation model (DEM). The images will be obtained through Alaska Satelite Facility ASF, it contains imagery from various sensors. In our case we want the data from the Alos Palsar sensor. 
 
 In order to download data, you must create a Nasa Earthdata Account here: [Nasa Earthdata Registration](https://urs.earthdata.nasa.gov/users/new?client_id=BO_n7nTIlMljdvU6kRRB3g&redirect_uri=https%3A%2F%2Fauth.asf.alaska.edu%2Flogin&response_type=code&state=https%3A%2F%2Fsearch.asf.alaska.edu)
 
-# Download DEM
+# 1. Problem Statement
+An Indiana Farm Association wants to assess the risk of flooded crops during rain season for each of their farms.  To evaluate this several relief and soil drainage properties have to be taken into account.  To reduce costs regarding in-site measurements, remote sensing will be used to calculate relief parameters. One of these parameters is the slope of the terrain, that will be calculated using digital elevation models and GIS Software.
+
+To obtain the slope of every farm the association wants an automated tool for this purpose, also it is necessary to adjust the slope layer symbology to obtain slope map with a classified legend.
+
+**In this lab you will create a QGIS tool using PyQGIS that will take a Digital Elevation Model, clip it to the extent of the farm and calculate the slope of the terrain.**
+
+# 2. Data Acquisition
 
 ## Adding Basemap and creating polygon of interest
 QGIS has different methods to add a basemap, one of them is connecting to a Web Map Service (WMS) URL. USGS has a catalog for this purpose. 
@@ -57,7 +64,7 @@ To open that URL directly from QGIS, an action for the 'Alos_Palsar_Grid' will b
 
 ![Download](img/download.png)
 
-# QGIS Processing
+# 3. QGIS Processing
 QGIS Python API otherwise known as PyQGIS allows programmers to create new tools, plugins, and processing scripts within the software interface. 
 
 PyQGIS has 4 libraries:
@@ -74,13 +81,13 @@ QGIS comes with established methods that are found in the Toolbox window. It is 
 
 In order to make things easier and structured, QGIS allows to create processing scripts following a template. On the *Toolbox* window click on the Python icon and select *Create New Script from Template*.
 
+![Python Console](img/python_console.png)
+
 The goal is to build a processing script that will:
 - Clip the previously downloaded DEM file to the extent of the area of interest.
 - Fill the pixels that have no data using interpolation.
 - Calculate the slope of the terrain.
-- Adjust the symbology in order to display the results in a more comprehensible way.
-
-This repository contains a separate code for each step (clipping, filling, & calculating), and one consolidated script that joins the three together. 
+- Adjust the symbology in order to display the results in a more comprehensible way. 
 
 ### Script structure
 Let's disect the structure of the 'clip_dem' script
@@ -207,7 +214,7 @@ It is necessary to assign a variable name to the process in order to connect the
         return {'clipped_dem': clipping['OUTPUT']}
 
 ### Putting it together
-To integrate the other processes, the addtional parameters and operations must be created under the *def processAlgorithm* function. The result from the previous operation becomes the input of the next one.
+To integrate the other processes, the addtional parameters and operations must be created under the *def processAlgorithm* function. The result from the previous operation becomes the input of the next one. You will write the code for the remaining steps: filling the gaps using 'gdal:fillnodata' and calculating the slope with  'native:slope'.
 
 ![workflow](img/workflow.jpg)
 
@@ -230,7 +237,7 @@ Now that the processing script was saved correctly, it can be executed. By selec
 
 ![Tool](img/Tool.png)
 
-### Symbology
+# 4. Data Visualization 
 The results are visually represented in a single band of grey tones. This symbology is not very helpful for understanding spatial data, therefore, the code named 'Symbology.py' will be executed from the Python console. 
 It is executed from the console instead of the *Toolbox* window, because we need to interact with the QGIS interface.
 
@@ -239,8 +246,17 @@ It is executed from the console instead of the *Toolbox* window, because we need
 To interact with the interface, PyQGIS uses the 'iface' class.
 The code classifies slope values in 5 equal intervals, assigns a color to each interval, and adds a new legend that shows the limit values of the interval. This helps to visualize steep or plain zones better. The 'slope' layer must be selected so that the code from 'Symbology.py' identifies it as the active layer to be reclassified.
 
+Create a layout view of your map by clicking on the top menu bar *Project* --> *New Print Layout* and assing a name to the layout.
+
+![New Layout](img/new_layout.png)
+
+A new window will open, then on the left menu bar select *Add Map* to add the layers present in the QGIS project, then select *Add Label* and create a title for the map, and to add the legend select *Add Legend*, arrange how you want the pieces to be layed out. 
+
+Export final product clicking on *Layout* and select *Export as Image*. 
+
+![Export](img/export.png)
+
 Final results should be similar to this:
 
 ![Result](img/Result.png)
 
-Example results are saved in a geopackage inside the 'Solutions' folder. 
