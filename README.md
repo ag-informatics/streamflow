@@ -104,11 +104,11 @@ First the class 'QCoreApplication', is imported from the Qt framework. This clas
 
 A Python class is created, it contains all the parameters and methods needed in the processing algorithm. This class is named according to the purpose of the algorithm.  
 
-        class ClipDemProcessingAlgorithm(QgsProcessingAlgorithm):
+        class SlopeCalculationProcessingAlgorithm(QgsProcessingAlgorithm):
 
 Given that the process algorithm works like a QGIS tool, parameters must be named. In this case the parameters are: a shapefile, a DEM file (input), and a clipped DEM (output), a filled DEM (output) and the calculated slope layer (output) according to the extent of the shapefile.
 
-        class ClipDemProcessingAlgorithm(QgsProcessingAlgorithm):
+        class SlopeCalculationProcessingAlgorithm(QgsProcessingAlgorithm):
             DEM = 'dem'
             FARM_SHP = 'farm_shape'
             CLIP_DEM = 'clipped_dem'
