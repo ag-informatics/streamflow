@@ -81,7 +81,7 @@ QGIS comes with established methods that are found in the Toolbox window. It is 
 
 In order to make things easier and structured, QGIS allows to create processing scripts following a template. On the *Toolbox* window click on the Python icon and select *Create New Script from Template*.
 
-![Python Console](img/python_console.png)
+![Python Console](img/python_window.png)
 
 The goal is to build a processing script that will:
 - Clip the previously downloaded DEM file to the extent of the area of interest.
