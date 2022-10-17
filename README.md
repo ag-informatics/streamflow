@@ -90,7 +90,7 @@ The goal is to build a processing script that will:
 - Adjust the symbology in order to display the results in a more comprehensible way. 
 
 ### Script structure
-Let's disect the structure of the 'clip_dem' script
+Let's disect the structure of the script
 
 First the class 'QCoreApplication', is imported from the Qt framework. This class is used to provide and contain a main event loop, in which other events from the operating system and QGIS can be processed and dispatched.  Next qgis classes that will be used are imported from the qgis core module. 
 
@@ -106,12 +106,14 @@ A Python class is created, it contains all the parameters and methods needed in 
 
         class ClipDemProcessingAlgorithm(QgsProcessingAlgorithm):
 
-Given that the process algorithm works like a QGIS tool, parameters must be named. In this case the parameters are: a shapefile, a DEM file (input), and a clipped DEM (output) according to the extent of the shapefile.
+Given that the process algorithm works like a QGIS tool, parameters must be named. In this case the parameters are: a shapefile, a DEM file (input), and a clipped DEM (output), a filled DEM (output) and the calculated slope layer (output) according to the extent of the shapefile.
 
         class ClipDemProcessingAlgorithm(QgsProcessingAlgorithm):
             DEM = 'dem'
             FARM_SHP = 'farm_shape'
             CLIP_DEM = 'clipped_dem'
+            FILL_DEM = 'filled_dem'
+            SLOPE = 'slope'
 
 Once the parameters are named, functions are used to provide a title and a short description of the algorithm.
             
@@ -119,18 +121,18 @@ Once the parameters are named, functions are used to provide a title and a short
                 return QCoreApplication.translate('Processing', string)
 
             def createInstance(self):
-                return ClipDemProcessingAlgorithm()
+                return SlopeCalculationProcessingAlgorithm()
 
             def name(self):
-                return 'clip_dem'
+                return 'slope_calculation'
 
             def displayName(self):
-                return self.tr('Clip Dem')
+                return self.tr('Slope Calculation')
 
             def shortHelpString(self):
-                return self.tr("Clip Raster by Mask Layer")
+                return self.tr("Clip raster, fill no data gaps and calculate slope using interpolation")
 
-Next, the function that iniates the algorithm defines in further details the parameters. This is done by using the *QgsProcessingParameter* classes. In this case we define the input vector layer as a feature source, input DEM as a raster layer, and the output clipped DEM as a raster destination.
+Next, the function that iniates the algorithm defines in further details the parameters. This is done by using the *QgsProcessingParameter* classes. In this case we define the input vector layer as a feature source, input DEM as a raster layer, and the outputs as a raster destination.
 
         def initAlgorithm(self, config=None):
             self.addParameter(
@@ -143,7 +145,7 @@ Next, the function that iniates the algorithm defines in further details the par
             self.addParameter(
                 QgsProcessingParameterRasterLayer(
                     self.DEM,
-                    self.tr('Input Raster DEM')
+                    self.tr('Input Raster DEM'),
                     [QgsProcessing.TypeRaster]
                 )
             )
@@ -151,7 +153,23 @@ Next, the function that iniates the algorithm defines in further details the par
             self.addParameter(
                 QgsProcessingParameterRasterDestination(
                     self.CLIP_DEM,
-                    self.tr('Output Clipped DEM')
+                    self.tr('Output Clipped DEM'),
+                    [QgsProcessing.TypeRaster]
+                )
+            )
+            
+            self.addParameter(
+                QgsProcessingParameterRasterDestination(
+                    self.FILL_DEM,
+                    self.tr('Output Filled DEM'),
+                    [QgsProcessing.TypeRaster]
+                )
+            )
+            
+            self.addParameter(
+                QgsProcessingParameterRasterDestination(
+                    self.SLOPE,
+                    self.tr('Output Slope Raster'),
                     [QgsProcessing.TypeRaster]
                 )
             )
@@ -174,13 +192,23 @@ The final function calls the current instance of the class to access the variabl
                     self.DEM,
                     context
                 )
+                clipped_dem = self.parameterAsRasterLayer(
+                    parameters,
+                    self.CLIP_DEM,
+                    context
+                )
+                filled_dem = self.parameterAsRasterLayer(
+                    parameters,
+                    self.FILL_DEM,
+                    context
+                )
 
 To execute the desired operation, an existent tool from QGIS is used. The tool is named *Clip Raster by Mask Layer*, it is executed using the *run()* method and it has its own requirements. 
 
 There are two ways to know the tool requirements:
 - Use the algortihm help method in the Python console.
 
-        processing.algorithmHelp("native:buffer")
+        processing.algorithmHelp("native:slope")
 
 - Select and execute the tool from the *Toolbox* window, and then select on the top menu bar *Processing* --> *History* to see the requirements.
 
@@ -214,7 +242,7 @@ It is necessary to assign a variable name to the process in order to connect the
         return {'clipped_dem': clipping['OUTPUT']}
 
 ### Putting it together
-To integrate the other processes, the addtional parameters and operations must be created under the *def processAlgorithm* function. The result from the previous operation becomes the input of the next one. You will write the code for the remaining steps: filling the gaps using 'gdal:fillnodata' and calculating the slope with  'native:slope'.
+To integrate the other processes, the result from the previous operation needs to be the input of the next one. You will write the code for the remaining steps: filling the gaps using 'gdal:fillnodata' and calculating the slope with  'native:slope'.
 
 ![workflow](img/workflow.jpg)
 
