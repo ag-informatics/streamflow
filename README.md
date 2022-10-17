@@ -12,7 +12,7 @@ We will work with raster files, specifically a digital elevation model (DEM). Th
 In order to download data, you must create a Nasa Earthdata Account here: [Nasa Earthdata Registration](https://urs.earthdata.nasa.gov/users/new?client_id=BO_n7nTIlMljdvU6kRRB3g&redirect_uri=https%3A%2F%2Fauth.asf.alaska.edu%2Flogin&response_type=code&state=https%3A%2F%2Fsearch.asf.alaska.edu)
 
 # 1. Problem Statement
-An Indiana Farm Association wants to assess the risk of flooded crops during rain season for each of their farms.  To evaluate this several relief and soil drainage properties have to be taken into account.  To reduce costs regarding in-site measurements, remote sensing will be used to calculate relief parameters. One of these parameters is the slope of the terrain, that will be calculated using digital elevation models and GIS Software.
+An Indiana Farm Association wants to assess the risk of flooded crops during rain season for each of their farms.  To evaluate the chance of risk, several relief and soil drainage properties have to be taken into account.  To reduce costs regarding in-site measurements, remote sensing will be used to calculate relief parameters. One of these parameters is the slope of the terrain, that will be calculated using digital elevation models and GIS Software.
 
 To obtain the slope of every farm the association wants an automated tool for this purpose, also it is necessary to adjust the slope layer symbology to obtain slope map with a classified legend.
 
