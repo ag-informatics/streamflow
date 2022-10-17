@@ -14,7 +14,7 @@ In order to download data, you must create a Nasa Earthdata Account here: [Nasa 
 # 1. Problem Statement
 An Indiana Farm Association wants to assess the risk of flooded crops during rain season for each of their farms.  To evaluate the chance of risk, several relief and soil drainage properties have to be taken into account.  To reduce costs regarding in-site measurements, remote sensing will be used to calculate relief parameters. One of these parameters is the slope of the terrain, that will be calculated using digital elevation models and GIS Software.
 
-To obtain the slope of every farm the association wants an automated tool for this purpose, also it is necessary to adjust the slope layer symbology to obtain slope map with a classified legend.
+To obtain the slope of every farm the association wants an automated tool for this purpose, also it is necessary to adjust the slope layer symbology to obtain a slope map with a classified legend.
 
 **In this lab you will create a QGIS tool using PyQGIS that will take a Digital Elevation Model, clip it to the extent of the farm and calculate the slope of the terrain.**
 
